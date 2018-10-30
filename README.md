@@ -16,7 +16,7 @@ You will need to have an Incoming Webhook connector added to the channel in the 
 
 **Please submit an issue if you encounter any customizations or errors not described above during the import process.**
 
-## How to Recreate The Flow
+## How to Recreate the Flow
 
 If you wish to recreate this Flow in your tenant rather than import it, you may do so by following these instructions. Begin by creating a blank Flow and then add a Recurrence trigger. This trigger dictates how often the messages potentially may be posted. In this example, it will post once daily (assuming new messages exist.)
 
@@ -248,11 +248,70 @@ The Body field contains the markup used to represent the card posted in Teams. T
 
 ![Post a card in Alerts channel of IT Department team](https://imgur.com/5gfe0D2.png)
 
-Your Flow is now ready to run! You can test it out, but you may find that no card is posted because no new messages fall within the filter criteria. In this case, you may wish to temporarily alter the filter to allow some historical messages to be added to the channel to "seed" it with some initial content. Just be sure to reset the filter to match your desired recurrence schedule when you are finished.
+Your Flow is now ready to run! You can test it out, but you may find that no card is posted because no new messages fall within the filter criteria. In this case, you may wish to temporarily alter the filter to allow some historical messages to be added to the channel to "seed" it with some initial content. Just be sure to reset the filter to match your desired recurrence schedule when you are finished. A sample of a posted card can be seen below.
+
+![Sample](https://imgur.com/8zNU9BH.png)
 
 ## How to Create the Incoming Webhook URL
 
+Start by clicking the 3-dots icon next to the channel name and choosing Connectors. This should pop-up a list of connectors that you can add to your channel. Click the Add button next to the Incoming Webhook connector.
+
+![Add Incoming Webhook Connector](https://imgur.com/tl0qFJ9.png)
+
+Fill in the required information to create the webhook as shown below. Note that the name chosen will be the "user name" that the cards will be posted under in your channel.
+
+![Create Incoming Webhook](https://imgur.com/Twb5jPj.png)
+
+Upon creation of the webhook, the form will change to give you a URL for posting cards in your channel. You will copy-and-paste this URL into URI field of the Post a Card action of your Flow. When you have done so, you can safely close this dialog by clicking the Done button. 
+
+![Incoming Webhook URL](https://imgur.com/bOpfDok.png)
+
+After closing the previous dialog, you are redirected to the list of installed and configured connectors for this channel. If you need to retrieve the URL again or make changes to the name or image, click the Configure button from this list to do so.
+
+![Connectors](https://imgur.com/GY2P6uN.png)
+
+You'll note that adding this connector has posted a notice to the channel that the connector has been added. This is purely informational and can be deleted if desired. Removing this post will not remove the connector itself from your channel.
+
+![Webhook Installed](https://imgur.com/Lquk8Hg.png)
+
 ## How to Register the App in Azure AD
+
+To retrieve the messages from the Office 365 Service Communications API, we will need to register an application in Azure AD with the proper permissions. Start by going to App Registrations in Azure AD. Click the New Registration button, fill in the form as shown below, and click the Register button.
+
+![Register an Application](https://imgur.com/AR58jAK.png)
+
+Next, you'll create a client secret. In App Registrations, click on the app you registered above. Choose Client & Secrets from the menu on the left. Click the New Client Secret button to bring up the dialog shown below. Select Never if you do not wish for your client secret to expire. Hit the Add button to save your secret. 
+
+![Add a Client Secret](https://imgur.com/d9nQFcL.png)
+
+Note that you'll only get to copy it one time immediately following this save. Subsequent visits to the page will display an obfuscated version of the secret instead.
+
+![Client Secrets](https://imgur.com/IH1F39M.png)
+
+Once you have created a client secret, you must also set the API permissions. While in App Registrations, select the app you have registered for this and choose API Permissions from the menu on the left. You'll then be presented with a selection of APIs to choose from. The one we are using for this Flow is th e Office 365 Management APIs found in the Microsoft APIs tab.
+
+![Select an API](https://imgur.com/wN8i7yv.png)
+
+Select Application Permissions and click the Expand All button. You will need to check the permissions shown below: ActivityFeed.Read and ServiceHealth.Read. Click the Add Permissions button to save these permissions.
+
+![What type of permissions](https://imgur.com/chBaVu7.png)
+
+Lastly, you'll need to grant consent for these permissions. This can be done by clicking the Grant Admin Consent button at the bottom of the API Permissions page. Upon doing so, you'll notice the Consent Required column has changed for the permissions selected. 
+
+![Grant Admin Consent](https://imgur.com/HfPj8wG.png)
+
+Be sure to copy-and-paste the Client ID and Client Secret into the Get Messages action in your Flow as described in the previous section of this page.
 
 ## References
 
+[Get started with Office 365 Management APIs](https://docs.microsoft.com/en-us/office/office-365-management-api/get-started-with-office-365-management-apis)
+
+[Schema reference for Workflow Definition Language in Azure Logic Apps](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-workflow-definition-language)
+
+[Introducing Office 365 Connectors for Microsoft Teams](https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/connectors/connectors)
+
+[Legacy actionable message card reference](https://docs.microsoft.com/en-us/outlook/actionable-messages/message-card-reference)
+
+[Message Card Playground](https://messagecardplayground.azurewebsites.net/)
+
+[Adaptive Card Designer](https://acdesignerstaging.azurewebsites.net/)

@@ -12,7 +12,9 @@ You can find a zipped release version of these files in the Releases tab above. 
 - Post a card in Alerts channel of IT Department team: The URI field needs to have the Incoming Webhook URL replaced.
 - Post a card in Alerts channel of IT Department team: The Flow may not save because raw @ symbols appear in the Body field. To save, you may need to escape them with another @ symbol (e.g. @@type) before saving.
 
-Please submit an issue if you encounter any customizations or errors not described above during the import process.
+You will need to have an Incoming Webhook connector added to the channel in the team that you want to receive the alerts. You will also need to register an app in Azure AD to provide access to the Office 365 Service Communications API. Details on how to setup both of these items can be found in later sections of this page.
+
+**Please submit an issue if you encounter any customizations or errors not described above during the import process.**
 
 ## How to Recreate The Flow
 

@@ -1,0 +1,25 @@
+{
+    "schema": "1.0",
+    "details": {
+        "displayName": "Office 365 Service Communications",
+        "description": "Posts cards of Office 365 Service Communications in a Microsoft Teams channel",
+        "createdTime": "2018-10-30T04:21:46.398481Z",
+        "packageTelemetryId": "f1ff65a9-238a-4a68-93c0-f1b135839097",
+        "creator": "Paul Choquette",
+        "sourceEnvironment": ""
+    },
+    "resources": {
+        "14d604a4-5313-4558-ba25-e208924f092a": {
+            "type": "Microsoft.Flow/flows",
+            "suggestedCreationType": "New",
+            "creationType": "Existing, New, Update",
+            "details": {
+                "displayName": "Post Office 365 Service Communications to IT Department Alerts",
+                "comment": "Will need to follow instructions here to fully configure this: https://github.com/star-crossed/O365ServiceCommsAlerts"
+            },
+            "configurableBy": "User",
+            "hierarchy": "Root",
+            "dependsOn": []
+        }
+    }
+}

@@ -1,0 +1,293 @@
+{
+    "name": "a0a92845-39d0-4b5c-ba8c-30682980071a",
+    "id": "/providers/Microsoft.Flow/flows/a0a92845-39d0-4b5c-ba8c-30682980071a",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Post Office 365 Service Communications to IT Department Alerts",
+        "definition": {
+            "metadata": {
+                "workflowEntityId": null,
+                "creator": {
+                    "id": "83c6343f-9957-49e8-8077-be13a1930f36",
+                    "type": "User",
+                    "tenantId": "d51a7eaf-77aa-48b2-a135-6c92fd7a5093"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-10-30T02:09:40.9087353Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "Recurrence": {
+                    "recurrence": {
+                        "frequency": "Day",
+                        "interval": 1,
+                        "timeZone": "Pacific Standard Time",
+                        "startTime": "2018-10-29T00:00:00Z"
+                    },
+                    "type": "Recurrence"
+                }
+            },
+            "actions": {
+                "Get_Messages": {
+                    "runAfter": {},
+                    "type": "Http",
+                    "inputs": {
+                        "method": "GET",
+                        "uri": "https://manage.office.com/api/v1.0/***REPLACE THIS WITH YOUR TENANT DOMAIN***/ServiceComms/Messages?$filter=LastUpdatedTime ge @{addDays(utcNow(), -1)} and MessageType eq Microsoft.Office365ServiceComms.ExposedContracts.MessageType'MessageCenter'",
+                        "headers": {
+                            "Accept": "application/json"
+                        },
+                        "authentication": {
+                            "type": "ActiveDirectoryOAuth",
+                            "tenant": "***REPLACE THIS WITH YOUR TENANT DOMAIN***",
+                            "audience": "https://manage.office.com",
+                            "clientId": "***REPLACE THIS WITH YOUR CLIENTID***",
+                            "secret": "***REPLACE THIS WITH YOUR SECRET***"
+                        }
+                    }
+                },
+                "Parse_Messages": {
+                    "runAfter": {
+                        "Get_Messages": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "ParseJson",
+                    "inputs": {
+                        "content": "@body('Get_Messages')",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "@@odata.context": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "@@odata.type": {
+                                                "type": "string"
+                                            },
+                                            "AffectedWorkloadDisplayNames": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "AffectedWorkloadNames": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "Status": {
+                                                "type": "string"
+                                            },
+                                            "Workload": {},
+                                            "WorkloadDisplayName": {},
+                                            "ActionType": {
+                                                "type": "string"
+                                            },
+                                            "AffectedTenantCount": {
+                                                "type": "number"
+                                            },
+                                            "AffectedUserCount": {},
+                                            "Classification": {
+                                                "type": "string"
+                                            },
+                                            "EndTime": {
+                                                "type": "string"
+                                            },
+                                            "Feature": {},
+                                            "FeatureDisplayName": {},
+                                            "Id": {
+                                                "type": "string"
+                                            },
+                                            "ImpactDescription": {},
+                                            "LastUpdatedTime": {
+                                                "type": "string"
+                                            },
+                                            "MessageType": {
+                                                "type": "string"
+                                            },
+                                            "Messages": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "MessageText": {
+                                                            "type": "string"
+                                                        },
+                                                        "PublishedTime": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "MessageText",
+                                                        "PublishedTime"
+                                                    ]
+                                                }
+                                            },
+                                            "PostIncidentDocumentUrl": {},
+                                            "Severity": {
+                                                "type": "string"
+                                            },
+                                            "StartTime": {
+                                                "type": "string"
+                                            },
+                                            "Title": {
+                                                "type": "string"
+                                            },
+                                            "ActionRequiredByDate": {},
+                                            "AnnouncementId": {
+                                                "type": "number"
+                                            },
+                                            "Category": {
+                                                "type": "string"
+                                            },
+                                            "ExternalLink": {
+                                                "type": "string"
+                                            },
+                                            "IsDismissed": {
+                                                "type": "boolean"
+                                            },
+                                            "IsRead": {
+                                                "type": "boolean"
+                                            },
+                                            "IsMajorChange": {
+                                                "type": "boolean"
+                                            },
+                                            "PreviewDuration": {},
+                                            "AppliesTo": {},
+                                            "MilestoneDate": {
+                                                "type": "string"
+                                            },
+                                            "Milestone": {
+                                                "type": "string"
+                                            },
+                                            "BlogLink": {
+                                                "type": "string"
+                                            },
+                                            "HelpLink": {
+                                                "type": "string"
+                                            },
+                                            "FlightName": {},
+                                            "FeatureName": {}
+                                        },
+                                        "required": [
+                                            "@@odata.type",
+                                            "AffectedWorkloadDisplayNames",
+                                            "AffectedWorkloadNames",
+                                            "Status",
+                                            "Workload",
+                                            "WorkloadDisplayName",
+                                            "ActionType",
+                                            "AffectedTenantCount",
+                                            "AffectedUserCount",
+                                            "Classification",
+                                            "EndTime",
+                                            "Feature",
+                                            "FeatureDisplayName",
+                                            "Id",
+                                            "ImpactDescription",
+                                            "LastUpdatedTime",
+                                            "MessageType",
+                                            "Messages",
+                                            "PostIncidentDocumentUrl",
+                                            "Severity",
+                                            "StartTime",
+                                            "Title",
+                                            "ActionRequiredByDate",
+                                            "AnnouncementId",
+                                            "Category",
+                                            "ExternalLink",
+                                            "IsDismissed",
+                                            "IsRead",
+                                            "IsMajorChange",
+                                            "PreviewDuration",
+                                            "AppliesTo",
+                                            "MilestoneDate",
+                                            "Milestone",
+                                            "BlogLink",
+                                            "HelpLink",
+                                            "FlightName",
+                                            "FeatureName"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "Are_there_any_messages": {
+                    "actions": {
+                        "Do_this_for_each_message": {
+                            "foreach": "@body('Parse_Messages')?['value']",
+                            "actions": {
+                                "Post_a_card_in_Alerts_channel_of_IT_Department_team": {
+                                    "runAfter": {},
+                                    "type": "Http",
+                                    "inputs": {
+                                        "method": "POST",
+                                        "uri": "***REPLACE THIS WITH YOUR INCOMING WEBHOOK URL***",
+                                        "headers": {
+                                            "Content-Type": "application/json"
+                                        },
+                                        "body": {
+                                            "@@type": "MessageCard",
+                                            "@@context": "http://schema.org/extensions",
+                                            "text": "@{last(item().Messages).MessageText}",
+                                            "title": "@{items('Do_this_for_each_message')?['Title']}",
+                                            "sections": [
+                                                {
+                                                    "facts": [
+                                                        {
+                                                            "name": "Services Affected",
+                                                            "value": "@{join(item().AffectedWorkloadDisplayNames, ', ')}"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "potentialAction": [
+                                                {
+                                                    "@@context": "http://schema.org",
+                                                    "@@type": "ViewAction",
+                                                    "name": "View related article",
+                                                    "target": [
+                                                        "@{items('Do_this_for_each_message')?['ExternalLink']}"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "runAfter": {},
+                            "type": "Foreach"
+                        }
+                    },
+                    "runAfter": {
+                        "Parse_Messages": [
+                            "Succeeded"
+                        ]
+                    },
+                    "expression": "@greater(length(body('Parse_Messages')?['value']), 0)",
+                    "type": "If"
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {},
+        "flowFailureAlertSubscribed": false
+    }
+}
